@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Configuration, OpenAIApi } from 'openai';
-import { Container, Typography, TextField, Button } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, Paper, Divider } from '@mui/material';
+import parser from 'html-react-parser';
 
 function App() {
   const configuration = new Configuration({
@@ -18,9 +19,10 @@ function App() {
     try {
       const response = await openai.createCompletion({
         prompt: prompt,
-        model: 'text-davinci-003',
+        model: 'text-curie-001',
         temperature: 0.5,
-        max_tokens: 100
+        max_tokens: 1000,
+        stop: '/n'
       });
       setResult(response.data.choices[0].text);
     } catch (error) {
@@ -31,21 +33,44 @@ function App() {
 
   return (
     <Container>
-      <Typography variant="h1">OpenAI Demo</Typography>
-      <TextField
-        multiline
-        maxRows={4}
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
-      <Button 
-        onClick={handleClick}
-        disabled={loading || prompt.length === 0}
-      >
-        {loading ? 'Loading...' : 'Generate'}
-      </Button>
-      <Typography variant="h2">Result</Typography>
-      <Typography variant="body1">{result}</Typography>
+      <Box mx={35}>
+        <Typography variant="h5" align='center' fontWeight='bold' sx={{
+          mt: 10,
+          mb: 3
+        }}>ChatGPT Demo</Typography>
+        <Paper elevation={3} sx={{
+          p: 2
+        }}>
+          <TextField
+            fullWidth
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder='Input your question here...'
+          />
+          <Button
+            onClick={handleClick}
+            disabled={loading || prompt.length === 0}
+            variant='contained'
+            fullWidth
+            sx={{
+              my: 2
+            }}
+          >
+            {loading ? 'Generating...' : 'Generate'}
+          </Button>
+        </Paper>
+        <Paper elevation={3} sx={{
+          p: 2,
+          my: 2
+        }}>
+          <Typography variant='body1' fontWeight='bold'>Answer</Typography>
+          <Divider sx={{
+            my: 2
+          }} />
+          <Typography variant='body2'>{result ? parser(result) : 'Ask anything'}</Typography>
+        </Paper>
+        <Typography variant='subtitle2' align='center'>Made with ❤️ by Jopanalv</Typography>
+      </Box>
     </Container>
   );
 }
