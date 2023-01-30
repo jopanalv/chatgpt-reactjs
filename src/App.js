@@ -1,25 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Configuration, OpenAIApi } from 'openai';
+import { Container, Typography, TextField, Button } from '@mui/material';
 
 function App() {
+  const configuration = new Configuration({
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+  });
+
+  const openai = new OpenAIApi(configuration);
+
+  const [prompt, setPrompt] = useState('');
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      const response = await openai.createCompletion({
+        prompt: prompt,
+        model: 'text-davinci-003',
+        temperature: 0.5,
+        max_tokens: 100
+      });
+      setResult(response.data.choices[0].text);
+    } catch (error) {
+      console.log(error.message)
+    }
+    setLoading(false);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Typography variant="h1">OpenAI Demo</Typography>
+      <TextField
+        multiline
+        maxRows={4}
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
+      <Button 
+        onClick={handleClick}
+        disabled={loading || prompt.length === 0}
+      >
+        {loading ? 'Loading...' : 'Generate'}
+      </Button>
+      <Typography variant="h2">Result</Typography>
+      <Typography variant="body1">{result}</Typography>
+    </Container>
   );
 }
 
