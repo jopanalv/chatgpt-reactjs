@@ -22,7 +22,6 @@ function App() {
         model: 'text-curie-001',
         temperature: 0.5,
         max_tokens: 1000,
-        stop: '.',
         n: 1,
       });
       setResult(response.data.choices[0].text);
