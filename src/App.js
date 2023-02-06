@@ -33,7 +33,7 @@ function App() {
 
   return (
     <Container>
-      <Box mx={35}>
+      <Box mx={{ xs: 2, md: 35 }}>
         <Typography variant="h5" align='center' fontWeight='bold' sx={{
           mt: 10,
           mb: 3
@@ -53,7 +53,7 @@ function App() {
             variant='contained'
             fullWidth
             sx={{
-              my: 2
+              mt: 2
             }}
           >
             {loading ? 'Generating...' : 'Generate'}
