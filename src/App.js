@@ -22,7 +22,8 @@ function App() {
         model: 'text-curie-001',
         temperature: 0.5,
         max_tokens: 1000,
-        stop: '/n'
+        stop: '.',
+        n: 1,
       });
       setResult(response.data.choices[0].text);
     } catch (error) {
@@ -37,7 +38,7 @@ function App() {
         <Typography variant="h5" align='center' fontWeight='bold' sx={{
           mt: 10,
           mb: 3
-        }}>ChatGPT Demo</Typography>
+        }}>Simple ChatGPT</Typography>
         <Paper elevation={3} sx={{
           p: 2
         }}>
